@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        EC2_1 = "ubuntu@15.206.81.75"
+        // EC2_1 = "ubuntu@15.206.81.75" // Commented out as per request
         EC2_2 = "ubuntu@15.207.247.128"
         DEPLOY_PATH = "/var/www/vmedulife"
-        BRANCH = "main"
+        BRANCH = "dev"
     }
 
     stages {
@@ -13,7 +13,7 @@ pipeline {
             steps {
                 sshagent (credentials: ['ubuntu']) {
                     script {
-                        def servers = [env.EC2_1, env.EC2_2]
+                        def servers = [env.EC2_2] // Only EC2_2 used for deployment
                         for (server in servers) {
                             sh """
                                 echo "Deploying to ${server}..."
