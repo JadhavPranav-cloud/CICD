@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // EC2_1 = "ubuntu@15.206.81.75" // Commented out
+        // EC2_1 = "ubuntu@15.206.81.75" // Commented out as per request
         EC2_2 = "ubuntu@15.207.247.128"
         DEPLOY_PATH = "/var/www/vmedulife"
         BRANCH = "dev"
