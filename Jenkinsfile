@@ -4,7 +4,7 @@ pipeline {
     environment {
         // EC2_1 = "ubuntu@15.206.81.75" // Commented out as per request
         EC2_2 = "ubuntu@13.203.220.62"
-        DEPLOY_PATH = "/var/www/html/index.nginx-debian.html"
+        DEPLOY_PATH = "/var/www/html/vmedulife"
         BRANCH = "dev"
     }
 
