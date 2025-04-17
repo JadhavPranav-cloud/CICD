@@ -38,12 +38,16 @@ pipeline {
         success {
             mail to: 'pranav.jadhav@corp.vmedulife.com',
                  subject: "✅ SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                 body: "The deployment completed successfully.\n\nConsole output:\n${env.BUILD_URL}console"
+                 body: """✅ Successfully deployed!
+Build Number: #${env.BUILD_NUMBER}
+Console Output: ${env.BUILD_URL}console"""
         }
         failure {
             mail to: 'pranav.jadhav@corp.vmedulife.com',
                  subject: "❌ FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                 body: "The deployment failed. Please check the logs.\n\nConsole output:\n${env.BUILD_URL}console"
+                 body: """❌ Deployment failed.
+Build Number: #${env.BUILD_NUMBER}
+Console Output: ${env.BUILD_URL}console"""
         }
     }
 }
