@@ -6,6 +6,7 @@ pipeline {
         DEPLOY_PATH = "/var/www/vmedulife"
         DEPLOY_TEMP = "/tmp/deploy-temp"
         BRANCH = "dev"
+        ZOHO_WEBHOOK_URL = "https://cliq.zoho.com/company/711832931/integrations/bots/b-2760934000010255033/edit/9"
     }
 
     stages {
@@ -18,13 +19,11 @@ pipeline {
                             sh """
                                 echo "Deploying to ${server}..."
 
-                                ssh -o StrictHostKeyChecking=no ${server} 'sudo mkdir -p ${DEPLOY_PATH} && mkdir -p ${DEPLOY_TEMP}'
-
-                                scp -o StrictHostKeyChecking=no -r website/* ${server}:${DEPLOY_TEMP}/
-
-                                ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf ${DEPLOY_PATH}/*'
-                                ssh -o StrictHostKeyChecking=no ${server} 'sudo mv ${DEPLOY_TEMP}/* ${DEPLOY_PATH}/'
-                                ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf ${DEPLOY_TEMP}'
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo mkdir -p ${env.DEPLOY_PATH} && mkdir -p ${env.DEPLOY_TEMP}'
+                                scp -o StrictHostKeyChecking=no -r website/* ${server}:${env.DEPLOY_TEMP}/
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf ${env.DEPLOY_PATH}/*'
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo mv ${env.DEPLOY_TEMP}/* ${env.DEPLOY_PATH}/'
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf ${env.DEPLOY_TEMP}'
                                 ssh -o StrictHostKeyChecking=no ${server} 'sudo systemctl restart nginx'
                             """
                         }
@@ -36,16 +35,24 @@ pipeline {
 
     post {
         success {
-            mail to: 'pranav.jadhav@corp.vmedulife.com',
-                 subject: "✅ SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                 body: """✅ Successfully deployed!
-Build Number: #${env.BUILD_NUMBER}"""
+            script {
+                def payload = """{
+                    "text": "✅ Successfully Deployed!\\nBuild Number: #${env.BUILD_NUMBER}\\n[View Console Output](${env.BUILD_URL}console)"
+                }"""
+                sh """
+                    curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${env.ZOHO_WEBHOOK_URL}
+                """
+            }
         }
         failure {
-            mail to: 'pranav.jadhav@corp.vmedulife.com',
-                 subject: "❌ FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                 body: """❌ Deployment failed.
-Build Number: #${env.BUILD_NUMBER}"""
+            script {
+                def payload = """{
+                    "text": "❌ Deployment Failed!\\nBuild Number: #${env.BUILD_NUMBER}\\n[View Console Output](${env.BUILD_URL}console)"
+                }"""
+                sh """
+                    curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${env.ZOHO_WEBHOOK_URL}
+                """
+            }
         }
     }
 }
