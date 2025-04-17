@@ -41,9 +41,6 @@ pipeline {
                  body: """✅ Successfully deployed!
 Build Number: #${env.BUILD_NUMBER}"""
 
-            def payload = """{
-                "text": "✅ Successfully Deployed!\\nBuild Number: #${env.BUILD_NUMBER}
-            }"""
             sh """
                 curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${env.ZOHO_WEBHOOK_URL}
             """
@@ -56,9 +53,6 @@ Build Number: #${env.BUILD_NUMBER}"""
                  body: """❌ Deployment failed.
 Build Number: #${env.BUILD_NUMBER}"""
 
-            def payload = """{
-                "text": "❌ Deployment Failed!\\nBuild Number: #${env.BUILD_NUMBER}
-            }"""
             sh """
                 curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${env.ZOHO_WEBHOOK_URL}
             """
