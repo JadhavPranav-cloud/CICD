@@ -37,7 +37,7 @@ pipeline {
     success {
         script {
             mail to: 'pranav.jadhav@corp.vmedulife.com',
-                 subject: "✅ Jenkins Build #${env.BUILD_NUMBER} Succeeded",
+                 subject: "✅ Jenkins Build #${env.BUILD_NUMBER} Succeeded"
 
             def payload = """{
                 "text": "✅ Successfully Deployed!\\nBuild Number: #${env.BUILD_NUMBER}"
@@ -50,7 +50,7 @@ pipeline {
     failure {
         script {
             mail to: 'pranav.jadhav@corp.vmedulife.com',
-                 subject: "❌ Jenkins Build #${env.BUILD_NUMBER} Failed",
+                 subject: "❌ Jenkins Build #${env.BUILD_NUMBER} Failed"
                  
             def payload = """{
                 "text": "❌ Deployment Failed!\\nBuild Number: #${env.BUILD_NUMBER})"
