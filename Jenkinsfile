@@ -41,7 +41,7 @@ pipeline {
                  body: "Check console output at ${env.BUILD_URL}console"
 
             def payload = """{
-                "text": "✅ Successfully Deployed!\\nBuild Number: #${env.BUILD_NUMBER}\\n[View Console Output](${env.BUILD_URL}console)"
+                "text": "✅ Successfully Deployed!\\nBuild Number: #${env.BUILD_NUMBER}"
             }"""
             sh """
                 curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${env.ZOHO_WEBHOOK_URL}
@@ -55,7 +55,7 @@ pipeline {
                  body: "Check console output at ${env.BUILD_URL}console"
 
             def payload = """{
-                "text": "❌ Deployment Failed!\\nBuild Number: #${env.BUILD_NUMBER}\\n[View Console Output](${env.BUILD_URL}console)"
+                "text": "❌ Deployment Failed!\\nBuild Number: #${env.BUILD_NUMBER})"
             }"""
             sh """
                 curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${env.ZOHO_WEBHOOK_URL}
