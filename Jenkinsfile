@@ -37,13 +37,12 @@ pipeline {
     success {
         script {
             mail to: 'pranav.jadhav@corp.vmedulife.com',
-                
-Build Number: #${env.BUILD_NUMBER}"""
+                 subject: "✅ Jenkins Build #${env.BUILD_NUMBER} Succeeded",
+                 body: "Check console output at ${env.BUILD_URL}console"
 
             def payload = """{
                 "text": "✅ Successfully Deployed!\\nBuild Number: #${env.BUILD_NUMBER}\\n[View Console Output](${env.BUILD_URL}console)"
             }"""
-
             sh """
                 curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${env.ZOHO_WEBHOOK_URL}
             """
@@ -52,8 +51,8 @@ Build Number: #${env.BUILD_NUMBER}"""
     failure {
         script {
             mail to: 'pranav.jadhav@corp.vmedulife.com',
-                 
-Build Number: #${env.BUILD_NUMBER}"""
+                 subject: "❌ Jenkins Build #${env.BUILD_NUMBER} Failed",
+                 body: "Check console output at ${env.BUILD_URL}console"
 
             def payload = """{
                 "text": "❌ Deployment Failed!\\nBuild Number: #${env.BUILD_NUMBER}\\n[View Console Output](${env.BUILD_URL}console)"
