@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // EC2_1 = "ubuntu@15.206.81.75" // Commented out as per request
         EC2_2 = "ubuntu@15.207.116.242"
         DEPLOY_PATH = "/var/www/vmedulife"
+        DEPLOY_TEMP = "/tmp/deploy-temp"
         BRANCH = "dev"
     }
 
@@ -13,18 +13,18 @@ pipeline {
             steps {
                 sshagent (credentials: ['ubuntu']) {
                     script {
-                        def servers = [env.EC2_2] // Only EC2_2 used for deployment
+                        def servers = [env.EC2_2]
                         for (server in servers) {
                             sh """
                                 echo "Deploying to ${server}..."
 
-                                ssh -o StrictHostKeyChecking=no ${server} 'sudo mkdir -p ${DEPLOY_PATH} && mkdir -p /tmp/deploy-temp'
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo mkdir -p ${DEPLOY_PATH} && mkdir -p ${DEPLOY_TEMP}'
 
-                                scp -o StrictHostKeyChecking=no -r website/* ${server}:/tmp/deploy-temp/
+                                scp -o StrictHostKeyChecking=no -r website/* ${server}:${DEPLOY_TEMP}/
 
                                 ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf ${DEPLOY_PATH}/*'
-                                ssh -o StrictHostKeyChecking=no ${server} 'sudo mv /tmp/deploy-temp/* ${DEPLOY_PATH}/'
-                                ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf /tmp/deploy-temp'
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo mv ${DEPLOY_TEMP}/* ${DEPLOY_PATH}/'
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf ${DEPLOY_TEMP}'
                                 ssh -o StrictHostKeyChecking=no ${server} 'sudo systemctl restart nginx'
                             """
                         }
@@ -36,10 +36,14 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment completed successfully!'
+            mail to: 'pranav.jadhav@corp.vmedulife.com',
+                 subject: "✅ SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                 body: "The deployment completed successfully.\n\nConsole output:\n${env.BUILD_URL}console"
         }
         failure {
-            echo 'Deployment failed!'
+            mail to: 'pranav.jadhav@corp.vmedulife.com',
+                 subject: "❌ FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                 body: "The deployment failed. Please check the logs.\n\nConsole output:\n${env.BUILD_URL}console"
         }
     }
 }
