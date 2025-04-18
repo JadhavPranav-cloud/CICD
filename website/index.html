@@ -3,59 +3,85 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login Page</title>
+  <title>Impressive HTML Test Page</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      animation: fadeIn 1.5s ease-in;
     }
-    .login-container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 300px;
-    }
-    .login-container h2 {
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 400px;
       text-align: center;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      animation: slideUp 0.8s ease-out;
+    }
+
+    .card h1 {
+      font-size: 2rem;
       margin-bottom: 20px;
     }
-    input[type="text"], input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+
+    .card p {
+      font-size: 1rem;
+      margin-bottom: 30px;
+      color: #e0e0e0;
     }
-    input[type="submit"] {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
+
+    .card button {
+      background: #ff6a00;
       border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
       color: white;
-      font-size: 16px;
-      border-radius: 5px;
+      font-weight: bold;
       cursor: pointer;
+      transition: 0.3s ease;
     }
-    input[type="submit"]:hover {
-      background-color: #45a049;
+
+    .card button:hover {
+      background: #e65c00;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 500px) {
+      .card {
+        width: 90%;
+        padding: 20px;
+      }
+
+      .card h1 {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
-
-  <div class="login-container">
-    <h2>Pranav Login Page.....</h2>
-    <form action="/login" method="post">
-      <input type="text" name="username" placeholder="Username" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <input type="submit" value="Login" />
-    </form>
+  <div class="card">
+    <h1>🚀 My Test Page</h1>
+    <p>This is a beautifully styled and responsive HTML page for testing deployments or frontend rendering.</p>
+    <button onclick="alert('🚀 Deployed Successfully!')">Click Me</button>
   </div>
-
 </body>
 </html>
