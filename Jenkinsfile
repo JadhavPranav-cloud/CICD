@@ -12,19 +12,21 @@ pipeline {
     stages {
         stage('Deploy to EC2 Instances') {
             steps {
-                script {
-                    def servers = [env.EC2_2]
-                    for (server in servers) {
-                        sh """
-                            echo "Deploying to ${server}..."
+                sshagent (credentials: ['ubuntu']) {
+                    script {
+                        def servers = [env.EC2_2]
+                        for (server in servers) {
+                            sh """
+                                echo "Deploying to ${server}..."
 
-                            ssh -o StrictHostKeyChecking=no ${server} 'sudo mkdir -p ${DEPLOY_PATH} && mkdir -p ${DEPLOY_TEMP}'
-                            scp -o StrictHostKeyChecking=no -r website/* ${server}:${DEPLOY_TEMP}/
-                            ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf ${DEPLOY_PATH}/*'
-                            ssh -o StrictHostKeyChecking=no ${server} 'sudo mv ${DEPLOY_TEMP}/* ${DEPLOY_PATH}/'
-                            ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf ${DEPLOY_TEMP}'
-                            ssh -o StrictHostKeyChecking=no ${server} 'sudo systemctl restart nginx'
-                        """
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo mkdir -p ${DEPLOY_PATH} && mkdir -p ${DEPLOY_TEMP}'
+                                scp -o StrictHostKeyChecking=no -r website/* ${server}:${DEPLOY_TEMP}/
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf ${DEPLOY_PATH}/*'
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo mv ${DEPLOY_TEMP}/* ${DEPLOY_PATH}/'
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo rm -rf ${DEPLOY_TEMP}'
+                                ssh -o StrictHostKeyChecking=no ${server} 'sudo systemctl restart nginx'
+                            """
+                        }
                     }
                 }
             }
