@@ -6,7 +6,7 @@ pipeline {
         DEPLOY_PATH = "/var/www/vmedulife"
         DEPLOY_TEMP = "/tmp/deploy-temp"
         BRANCH = "dev"
-        ZOHO_WEBHOOK_URL = "https://cliq.zoho.com/company/711832931/integrations/bots/b-2760934000010255033/edit/9"
+        ZOHO_WEBHOOK_URL = "https://cliq.zoho.com/company/711832931/api/v2/bots/jenkinsbot/incoming"
     }
 
     stages {
